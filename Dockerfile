@@ -9,8 +9,12 @@ RUN a2enmod rewrite
 # Copy project files into web root
 COPY . /var/www/html/
 
-# Expose port 80
-EXPOSE 80
+# Copy startup script and make executable
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
-# Default command to start Apache
-CMD ["apache2-foreground"]
+# Expose Render default port
+EXPOSE 10000 80
+
+# Run entrypoint script
+CMD ["/start.sh"]
