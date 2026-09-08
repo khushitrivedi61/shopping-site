@@ -13,4 +13,5 @@ $RECYCLE.BIN/
 
 # Logs and databases
 *.log
+*.db
 error_log
