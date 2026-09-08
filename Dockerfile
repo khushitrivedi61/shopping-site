@@ -6,15 +6,15 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Configure Apache to listen on both port 80 and port 10000 (Render default)
+RUN sed -i 's/Listen 80/Listen 80\nListen 10000/' /etc/apache2/ports.conf && \
+    sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:80 \*:10000>/' /etc/apache2/sites-available/000-default.conf
+
 # Copy project files into web root
 COPY . /var/www/html/
 
-# Copy startup script and make executable
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+# Expose ports
+EXPOSE 80 10000
 
-# Expose Render default port
-EXPOSE 10000 80
-
-# Run entrypoint script
-CMD ["/start.sh"]
+# Start Apache directly using official base image command
+CMD ["apache2-foreground"]
